@@ -61,8 +61,12 @@ namespace PrismaticChrome.PVP
 		{
             using (var query = Db.Context<PvpInfo>())
 			{
-				args.Player.SendInfoMessage("排行:\n" + string.Join("\n", query.Config
-                    .OrderByDescending(i => i.killcount).ThenByDescending(i => i.deathcount)
+				//args.Player.SendInfoMessage("排行:\n" + string.Join("\n", query.Config
+    //                .OrderByDescending(i => i.killcount).ThenByDescending(i => i.deathcount)
+    //                .Take(10).Select((inf, i) => $"{i + 1}. {inf.GetShortMessage()}")));
+                
+                args.Player.SendInfoMessage("排行:\n" + string.Join("\n", query.Config
+                    .OrderByDescending(i => (double)i.killcount / (double)(i.killcount + i.deathcount)).ThenByDescending(i => i.killcount).ThenByDescending(i => i.deathcount)
                     .Take(10).Select((inf, i) => $"{i + 1}. {inf.GetShortMessage()}")));
 			}
 		}

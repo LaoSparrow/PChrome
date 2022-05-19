@@ -69,7 +69,7 @@ namespace PrismaticChrome.RPG
         {
             var npc = Main.npc[args.ID];
             var val = CalcRealDmg(npc, args.Damage, args.Critical > 0);
-            if (Config.Instance.multiplier.TryGetValue(npc.type, out var multiplier))
+            if (Config.Instance.multiplier?.TryGetValue(npc.type, out var multiplier) ?? false)
                 val *= multiplier;
             allocator.AddDamage(Main.npc[args.ID], args.Player?.Account?.Name, val);
         }

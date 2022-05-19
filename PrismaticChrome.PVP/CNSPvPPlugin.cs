@@ -50,6 +50,12 @@ namespace PrismaticChrome.PVP
             GetDataHandlers.PlayerSpawn += OnPlayerSpawn;
 			GetDataHandlers.TogglePvp += OnPVPChange;
 			SpecialProj = new Dictionary<int, Config.WeaponDebuffInfo>();
+
+            try
+            {
+                Dimension.Dimensions.PostStatusUpdateEvent += PostStatusUpdate;
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
 		}
 
         private static void OnPlayerSpawn(object _, GetDataHandlers.SpawnEventArgs args)
@@ -170,7 +176,7 @@ namespace PrismaticChrome.PVP
             
             foreach (var p in TShock.Players.Where(p => p?.Active ?? false))
             {
-                p.SendData(PacketTypes.Status, Blank + p.GetQueryString() + Blank + new string('\n', 30));
+                // p.SendData(PacketTypes.Status, Blank + p.GetQueryString() + Blank + new string('\n', 30));
                 foreach (var type in p.TPlayer.inventory.Where(item => item.buffType > 0 && item.consumable).Select(item => item.buffType))
                     p.SetBuff(type, 100);
 
@@ -195,6 +201,12 @@ namespace PrismaticChrome.PVP
                 }
                 p.UpdateLastArea();
             }
+        }
+
+        private static void PostStatusUpdate(TSPlayer p, StringBuilder stringBuilder)
+        {
+            stringBuilder.Append("\r\n");
+            stringBuilder.Append(p.GetQueryString());
         }
     }
 }
